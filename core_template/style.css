@@ -1,0 +1,13 @@
+body {
+    background-image: url("https://wallpaperaccess.com/full/2825704.gif");
+    background-color: #cccccc;
+}
+.template {
+    background-color: rgba(180, 180, 180, 0.8);
+    padding: 70px;
+    width: 400px;
+    margin-top: 175px;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 15px;
+}

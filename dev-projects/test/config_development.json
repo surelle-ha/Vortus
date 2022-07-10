@@ -7,10 +7,5 @@
         "CSS",
         "JavaScript"
     ],
-    "framework": [
-        "VueJS",
-        "Bootstrap",
-        "FontAwesome5",
-        "Tailwind"
-    ]
+    "framework": []
 }
