@@ -75,17 +75,6 @@ def createProject():
         while 1:
             projectName = str(input("[?] Project Name: "))
             if projectName == "": createProject()
-<<<<<<< HEAD
-            typep = [inquirer.List("typep", message="Type", choices=["Website"])]
-            projectType = inquirer.prompt(typep)
-            if projectType["typep"] == "Website":
-                devtype = [inquirer.List("devtype", message="Developer", choices=["FrontEnd"])]
-                projectDevType = inquirer.prompt(devtype)
-                if projectDevType["devtype"] == "FrontEnd":
-                    details = [
-                        inquirer.Checkbox( "content", message="Files", choices=["HTML", "CSS", "JavaScript"], default=["HTML"]),
-                        inquirer.Checkbox( "framework", message="Framework", choices=["VueJS", "Bootstrap", "FontAwesome5", "Tailwind"]),
-=======
             typep = [inquirer.List("typep", message="Select Type (\033[93mUse arrow keys\033[0m)", choices=["Website"])]
             projectType = inquirer.prompt(typep)
             if projectType["typep"] == "Website":
@@ -95,7 +84,6 @@ def createProject():
                     details = [
                         inquirer.Checkbox( "content", message="Check the files needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["HTML", "CSS", "JavaScript"], default=["HTML"]),
                         inquirer.Checkbox( "framework", message="Check the framework needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["VueJS", "Bootstrap", "FontAwesome5", "Tailwind"]),
->>>>>>> 914c781 (update1.2)
                     ]
                     projectDetails = inquirer.prompt(details)
                     projectSummary = {"name": projectName, "type": projectType["typep"], "developer": projectDevType["devtype"], "content": projectDetails["content"], "framework": projectDetails["framework"] }
@@ -139,22 +127,14 @@ def manageProject():
     try:
         while 1:
             upland()
-<<<<<<< HEAD
-            projectName = [inquirer.List("name", message="Projects", choices=os.listdir('dev-projects'))]
-=======
             projectName = [inquirer.List("name", message="Select Project (\033[93mUse arrow keys\033[0m)", choices=os.listdir('dev-projects'))]
->>>>>>> 914c781 (update1.2)
             projectName = inquirer.prompt(projectName)
             if not os.path.exists('dev-projects/' + projectName["name"]): 
                 print("[ \033[91mERROR\033[0m ] Project not found."), exit()
             else:
                 while 1:
                     upland()
-<<<<<<< HEAD
-                    startManage = [inquirer.List("start", message="Manage " + projectName["name"], choices=["Open in Default Browser", "Start Developmental Server", "Start Developmental Server PHP", "Open in VSCode [Requires VSCode]", "Add Developer Signature", "Delete Project", "Switch Project"])]
-=======
                     startManage = [inquirer.List("start", message="Manage Option (\033[93mUse arrow keys\033[0m) ::: " + projectName["name"], choices=["Open in Default Browser", "Start Developmental Server", "Start Developmental Server PHP", "Open in VSCode [Requires VSCode]", "Add Developer Signature", "Delete Project", "Switch Project"])]
->>>>>>> 914c781 (update1.2)
                     startManage = inquirer.prompt(startManage)
                     if startManage["start"] == "Open in Default Browser":
                         webbrowser.open("dev-projects/" + projectName["name"] + "/index.html", new=2)
@@ -182,11 +162,7 @@ def manageProject():
                         input("\033[4mPress any key to continue...\033[0m")
                     elif startManage["start"] == "Add Developer Signature": # NO FUNCTION
                         print("Add Developer Signature") 
-<<<<<<< HEAD
-                    elif startManage["start"] == "Delete Project": # NO FUNCTION Switch Project
-=======
                     elif startManage["start"] == "Delete Project": 
->>>>>>> 914c781 (update1.2)
                         deleteProject = [inquirer.List("delete", message="Are you sure?", choices=["Yes", "No"])]
                         deleteProject = inquirer.prompt(deleteProject)
                         if deleteProject["delete"] == "Yes":
@@ -199,26 +175,11 @@ def manageProject():
 
 
 def fastTask():
-<<<<<<< HEAD
-    init = [inquirer.List("solOption", message="", choices=["Create", "Manage", "Exit"])]
-=======
     init = [inquirer.List("solOption", message="Project Manager (\033[93mUse arrow keys\033[0m)", choices=["Create", "Manage", "Update", "Exit"])]
->>>>>>> 914c781 (update1.2)
     answer = inquirer.prompt(init)
     return answer["solOption"]
 
 def main(args):
-<<<<<<< HEAD
-    upland()
-    transactionInit = fastTask()
-    if transactionInit == "Create": createProject()
-    elif transactionInit == "Manage": manageProject()
-    else: exit()
-
-if __name__ == '__main__':
-    from psutil import process_iter
-    from signal import SIGKILL
-=======
     try:
         system("clear"), print("""\033[94mVortus v1.2\033[0m\033[92m
 ┌─────────────────────────────────────────┐
@@ -236,7 +197,6 @@ if __name__ == '__main__':
         exit()
 
 if __name__ == '__main__':
->>>>>>> 914c781 (update1.2)
     import webbrowser
     import fileinput
     import shutil
