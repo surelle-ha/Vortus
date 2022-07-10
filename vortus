@@ -15,7 +15,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 
-# PROJECT CREATION FUNCTION --
+# PROJECT CREATION FUNCTION 
 
 def html(projectName): 
     shutil.copy("core_template/index.html", "dev-projects/" + projectName)
