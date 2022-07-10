@@ -1,0 +1,204 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#  vortus.py
+#  Copyright 2022 Panda <panda@PANDA>
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+
+# PROJECT CREATION FUNCTION
+
+def html(projectName): 
+    shutil.copy("core_template/index.html", "dev-projects/" + projectName)
+    template = Template(filename="dev-projects/" + projectName + '/index.html')
+    with open("dev-projects/" + projectName + '/index.html', "w") as myfile:
+        myfile.write(template.render(title=projectName, bootstrap="", vue_1="", vue_2="", fontawesome5="", tailwind=""))
+
+def css(projectName): os.makedirs("dev-projects/" + projectName + "/css"), shutil.copy("core_template/style.css", "dev-projects/" + projectName + "/css")
+
+def js(projectName): os.makedirs("dev-projects/" + projectName + "/javascript"), shutil.copy("core_template/main.js", "dev-projects/" + projectName + "/javascript")
+
+def addFramework(projectName, fws):
+    if "Bootstrap" in fws: cdn_bootstrap = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">\n\t<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>\n\t<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>\n\t<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>'
+    else: cdn_bootstrap = ""
+    if "FontAwesome5" in fws: cdn_fontawesome = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">'
+    else: cdn_fontawesome = ""
+    if "Tailwind" in fws: cdn_tailwind = '<script src="https://cdn.tailwindcss.com"></script>'
+    else: cdn_tailwind = ""
+    if "VueJS" in fws: 
+        cdn_vue = '<script src="https://unpkg.com/vue@3"></script>'
+        script_vue = '''<div id="app">{{ message }}</div>
+        <script>
+            const { createApp } = Vue
+        
+            createApp({
+            data() {
+                return {
+                message: 'Hello Vue!'
+                }
+            }
+            }).mount('#app')
+        </script>'''
+    else: 
+        cdn_vue = "" 
+        script_vue = ""
+    shutil.copy("core_template/index.html", "dev-projects/" + projectName)
+    template = Template(filename="dev-projects/" + projectName + '/index.html')
+    with open("dev-projects/" + projectName + '/index.html', "w") as myfile:
+        myfile.write(template.render(title=projectName, bootstrap=cdn_bootstrap, vue_1=cdn_vue, vue_2=script_vue, fontawesome5=cdn_fontawesome, tailwind=cdn_tailwind))
+
+def cleanHTML(projectName):
+    with open("dev-projects/" + projectName + '/index.html', 'r') as f:
+        with open("dev-projects/" + projectName + '/indexx.html', 'w') as file:
+            for line in f:
+                if not line.isspace():
+                        file.write(line)
+    shutil.copy("dev-projects/" + projectName + "/indexx.html", "dev-projects/" + projectName + "/index.html")               
+    os.remove("dev-projects/" + projectName + '/indexx.html')
+
+# SYSTEM CORE 
+
+def upland(): system("clear"), print("[ \033[96mW\033[0m ] VORTUS PROJECT MANAGER ::: Version: \033[93mDevion\033[0m")
+
+def createProject():
+    try:
+        upland()
+        while 1:
+            projectName = str(input("[?] Project Name: "))
+            if projectName == "": createProject()
+            typep = [inquirer.List("typep", message="Type", choices=["Website"])]
+            projectType = inquirer.prompt(typep)
+            if projectType["typep"] == "Website":
+                devtype = [inquirer.List("devtype", message="Developer", choices=["FrontEnd"])]
+                projectDevType = inquirer.prompt(devtype)
+                if projectDevType["devtype"] == "FrontEnd":
+                    details = [
+                        inquirer.Checkbox( "content", message="Files", choices=["HTML", "CSS", "JavaScript"], default=["HTML"]),
+                        inquirer.Checkbox( "framework", message="Framework", choices=["VueJS", "Bootstrap", "FontAwesome5", "Tailwind"]),
+                    ]
+                    projectDetails = inquirer.prompt(details)
+                    projectSummary = {"name": projectName, "type": projectType["typep"], "developer": projectDevType["devtype"], "content": projectDetails["content"], "framework": projectDetails["framework"] }
+                    projectSummary = json.dumps(projectSummary, indent = 4)
+                    if not os.path.exists('dev-projects/' + projectName): 
+                        os.makedirs("dev-projects/" + projectName)
+                        with open("dev-projects/" + projectName + "/config_development.json", "w") as outfile:
+                            outfile.write(projectSummary)
+                    else:
+                        with open("dev-projects/" + projectName + "/config_development.json", "w") as outfile:
+                            outfile.write(projectSummary)
+                    upland(), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json created..\033[0m"), time.sleep(1), readJSON(projectName)
+                else: createProject()
+            else: createProject()
+    except:
+        upland(), main(1)
+
+def readJSON(projectName):
+    try:
+        JSONData = open("dev-projects/" + projectName+ "/config_development.json")
+        JSONData = json.load(JSONData), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json loaded..\033[0m")
+        print(json.dumps(JSONData, indent = 4)), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json checking..\033[0m")
+        print("[ \033[96m*\033[0m ] \033[93mGenerating Content(s)..\033[0m")
+        for content in JSONData[0]["content"]:
+            if content == "HTML": html(projectName)
+            elif content == "CSS": css(projectName)
+            elif content == "JavaScript": js(projectName)
+            else: pass
+        print("[ \033[96m*\033[0m ] \033[93mGenerating Framework(s)..\033[0m")
+        addFramework(projectName, JSONData[0]["framework"])
+        print("[ \033[96m*\033[0m ] \033[93mFramework(s) Added..\033[0m")
+        cleanHTML(projectName)
+        print("[ \033[96m*\033[0m ] \033[93mProject Environment Cleaned..\033[0m")
+
+        print("[ \033[96m*\033[0m ] \033[93mProject Ready..\033[0m")
+        input("\033[4mPress any key to continue...\033[0m")
+        upland(), main(1)
+    except IndexError: print("[ \033[91mERROR\033[0m ] Something went wrong."), exit()
+
+def manageProject():
+    try:
+        while 1:
+            upland()
+            projectName = [inquirer.List("name", message="Projects", choices=os.listdir('dev-projects'))]
+            projectName = inquirer.prompt(projectName)
+            if not os.path.exists('dev-projects/' + projectName["name"]): 
+                print("[ \033[91mERROR\033[0m ] Project not found."), exit()
+            else:
+                while 1:
+                    upland()
+                    startManage = [inquirer.List("start", message="Manage " + projectName["name"], choices=["Open in Default Browser", "Start Developmental Server", "Start Developmental Server PHP", "Open in VSCode [Requires VSCode]", "Add Developer Signature", "Delete Project", "Switch Project"])]
+                    startManage = inquirer.prompt(startManage)
+                    if startManage["start"] == "Open in Default Browser":
+                        webbrowser.open("dev-projects/" + projectName["name"] + "/index.html", new=2)
+                        print("[ \033[92mSUCCESS\033[0m ] Project Launched.")
+                        input("\033[4mPress any key to continue...\033[0m")
+                    elif startManage["start"] == "Start Developmental Server": 
+                        upland(), print("\033[4mCtrl + C to close server...\033[0m")
+                        print("\033[92m")
+                        print("SERVER\t\thttp://localhost:8000/dev-projects/" + projectName["name"] + "/index.html")
+                        print("SERVER\t\thttp://127.0.0.1:8000/dev-projects/" + projectName["name"] + "/index.html")
+                        system("python -m http.server 8000")
+                        print("\033[0m")
+                        input("\033[4mPress any key to continue...\033[0m")
+                    elif startManage["start"] == "Start Developmental Server PHP": 
+                        upland(), print("\033[4mCtrl + C to close server...\033[0m")
+                        print("\033[92m")
+                        print("SERVER\t\thttp://localhost:8000/dev-projects/" + projectName["name"] + "/index.php")
+                        print("SERVER\t\thttp://127.0.0.1:8000/dev-projects/" + projectName["name"] + "/index.php")
+                        system("php -S localhost:8000")
+                        print("\033[0m")
+                        input("\033[4mPress any key to continue...\033[0m")
+                    elif startManage["start"] == "Open in VSCode [Requires VSCode]":
+                        system("code dev-projects/" + projectName["name"])
+                        print("[ \033[92mSUCCESS\033[0m ] VSCode Launched.")
+                        input("\033[4mPress any key to continue...\033[0m")
+                    elif startManage["start"] == "Add Developer Signature": # NO FUNCTION
+                        print("Add Developer Signature") 
+                    elif startManage["start"] == "Delete Project": # NO FUNCTION Switch Project
+                        deleteProject = [inquirer.List("delete", message="Are you sure?", choices=["Yes", "No"])]
+                        deleteProject = inquirer.prompt(deleteProject)
+                        if deleteProject["delete"] == "Yes":
+                            shutil.rmtree("dev-projects/" + projectName["name"])
+                            break
+                    elif startManage["start"] == "Switch Project":
+                        break
+    except:
+        upland(), main(1)
+
+
+def fastTask():
+    init = [inquirer.List("solOption", message="", choices=["Create", "Manage", "Exit"])]
+    answer = inquirer.prompt(init)
+    return answer["solOption"]
+
+def main(args):
+    upland()
+    transactionInit = fastTask()
+    if transactionInit == "Create": createProject()
+    elif transactionInit == "Manage": manageProject()
+    else: exit()
+
+if __name__ == '__main__':
+    from psutil import process_iter
+    from signal import SIGKILL
+    import webbrowser
+    import fileinput
+    import shutil
+    from pprint import pprint
+    import inquirer
+    import sys
+    from os import system
+    import json
+    import os
+    import time
+    from mako.template import Template
+
+    sys.exit(main(sys.argv))
