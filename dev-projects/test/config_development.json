@@ -1,0 +1,16 @@
+{
+    "name": "test",
+    "type": "Website",
+    "developer": "FrontEnd",
+    "content": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+    ],
+    "framework": [
+        "VueJS",
+        "Bootstrap",
+        "FontAwesome5",
+        "Tailwind"
+    ]
+}
