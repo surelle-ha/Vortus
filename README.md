@@ -33,10 +33,15 @@
   <i>Support</i>
 </div>
 
+## What's New?
+Additional Feature for Vortus. You can now include ReactJS and jQuery to your project.
+- React JS (Development & Production) Added!
+- jQuery Added
+
 ## Installation
 You can download Vortus by cloning the Git repository:
 
-    git clone https://github.com//surelle-ha/Vortus.git
+    git clone https://github.com/surelle-ha/Vortus.git
    
 Navigate to Vortus and change permission.
 
