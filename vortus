@@ -21,13 +21,19 @@ def html(projectName):
     shutil.copy("core_template/index.html", "dev-projects/" + projectName)
     template = Template(filename="dev-projects/" + projectName + '/index.html')
     with open("dev-projects/" + projectName + '/index.html', "w") as myfile:
-        myfile.write(template.render(title=projectName, bootstrap="", vue_1="", vue_2="", fontawesome5="", tailwind=""))
+        myfile.write(template.render(title=projectName, bootstrap="", vue_1="", vue_2="", fontawesome5="", tailwind="", jquery="", reactdev="", reactprod=""))
 
 def css(projectName): os.makedirs("dev-projects/" + projectName + "/css"), shutil.copy("core_template/style.css", "dev-projects/" + projectName + "/css")
 
 def js(projectName): os.makedirs("dev-projects/" + projectName + "/javascript"), shutil.copy("core_template/main.js", "dev-projects/" + projectName + "/javascript")
 
 def addFramework(projectName, fws):
+    if "ReactJS Development" in fws: cdn_reactdev = '<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>\n\t<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>'
+    else: cdn_reactdev = ''
+    if "ReactJS Production" in fws: cdn_reactprod = '<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>\n\t<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>'
+    else: cdn_reactprod = ''
+    if "jQuery" in fws: cdn_jquery = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>'
+    else: cdn_jquery = ""
     if "Bootstrap" in fws: cdn_bootstrap = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">\n\t<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>\n\t<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>\n\t<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>'
     else: cdn_bootstrap = ""
     if "FontAwesome5" in fws: cdn_fontawesome = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">'
@@ -54,7 +60,7 @@ def addFramework(projectName, fws):
     shutil.copy("core_template/index.html", "dev-projects/" + projectName)
     template = Template(filename="dev-projects/" + projectName + '/index.html')
     with open("dev-projects/" + projectName + '/index.html', "w") as myfile:
-        myfile.write(template.render(title=projectName, bootstrap=cdn_bootstrap, vue_1=cdn_vue, vue_2=script_vue, fontawesome5=cdn_fontawesome, tailwind=cdn_tailwind))
+        myfile.write(template.render(title=projectName, bootstrap=cdn_bootstrap, vue_1=cdn_vue, vue_2=script_vue, fontawesome5=cdn_fontawesome, tailwind=cdn_tailwind, jquery=cdn_jquery, reactdev=cdn_reactdev, reactprod=cdn_reactprod))
 
 def cleanHTML(projectName):
     with open("dev-projects/" + projectName + '/index.html', 'r') as f:
@@ -83,7 +89,7 @@ def createProject():
                 if projectDevType["devtype"] == "FrontEnd":
                     details = [
                         inquirer.Checkbox( "content", message="Check the files needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["HTML", "CSS", "JavaScript"], default=["HTML"]),
-                        inquirer.Checkbox( "framework", message="Check the framework needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["VueJS", "Bootstrap", "FontAwesome5", "Tailwind"]),
+                        inquirer.Checkbox( "framework", message="Check the framework needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["jQuery", "VueJS", "ReactJS Development", "ReactJS Production", "Bootstrap", "FontAwesome5", "Tailwind"]),
                     ]
                     projectDetails = inquirer.prompt(details)
                     projectSummary = {"name": projectName, "type": projectType["typep"], "developer": projectDevType["devtype"], "content": projectDetails["content"], "framework": projectDetails["framework"] }
