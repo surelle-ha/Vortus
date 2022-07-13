@@ -1,0 +1,14 @@
+{
+    "name": "test_1",
+    "content": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+    ],
+    "framework": [
+        "VueJS",
+        "Bootstrap",
+        "FontAwesome5"
+    ],
+    "server_port": 8181
+}
