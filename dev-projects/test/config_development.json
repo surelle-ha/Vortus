@@ -8,8 +8,6 @@
         "JavaScript"
     ],
     "framework": [
-        "VueJS",
-        "Bootstrap",
-        "FontAwesome5"
+        "jQuery"
     ]
 }

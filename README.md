@@ -49,6 +49,10 @@ Navigate to Vortus and change permission.
 
     cd Vortus && chmod +x vortus
  
+Install required packages.
+
+    pip install -r requirements.txt
+
  ## Usage
 Run using recommended launch script
 
