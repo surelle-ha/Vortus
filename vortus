@@ -75,39 +75,7 @@ def cleanHTML(projectName):
 
 def upland(): system("clear"), print("[ \033[96mW\033[0m ] VORTUS PROJECT MANAGER ::: Version: \033[93mDevion\033[0m")
 
-def createProject():
-    try:
-        upland()
-        while 1:
-            projectName = str(input("[?] Project Name: "))
-            if projectName == "": createProject()
-            typep = [inquirer.List("typep", message="Select Type (\033[93mUse arrow keys\033[0m)", choices=["Website"])]
-            projectType = inquirer.prompt(typep)
-            if projectType["typep"] == "Website":
-                devtype = [inquirer.List("devtype", message="Select Developer Type (\033[93mUse arrow keys\033[0m)", choices=["FrontEnd"])]
-                projectDevType = inquirer.prompt(devtype)
-                if projectDevType["devtype"] == "FrontEnd":
-                    details = [
-                        inquirer.Checkbox( "content", message="Check the files needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["HTML", "CSS", "JavaScript"], default=["HTML"]),
-                        inquirer.Checkbox( "framework", message="Check the framework needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["jQuery", "VueJS", "ReactJS Development", "ReactJS Production", "Bootstrap", "FontAwesome5", "Tailwind"]),
-                    ]
-                    projectDetails = inquirer.prompt(details)
-                    projectSummary = {"name": projectName, "type": projectType["typep"], "developer": projectDevType["devtype"], "content": projectDetails["content"], "framework": projectDetails["framework"] }
-                    projectSummary = json.dumps(projectSummary, indent = 4)
-                    if not os.path.exists('dev-projects/' + projectName): 
-                        os.makedirs("dev-projects/" + projectName)
-                        with open("dev-projects/" + projectName + "/config_development.json", "w") as outfile:
-                            outfile.write(projectSummary)
-                    else:
-                        with open("dev-projects/" + projectName + "/config_development.json", "w") as outfile:
-                            outfile.write(projectSummary)
-                    upland(), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json created..\033[0m"), time.sleep(1), readJSON(projectName)
-                else: createProject()
-            else: createProject()
-    except:
-        upland(), main(1)
-
-def readJSON(projectName):
+def grantJSON(projectName):
     try:
         JSONData = open("dev-projects/" + projectName+ "/config_development.json")
         JSONData = json.load(JSONData), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json loaded..\033[0m")
@@ -129,6 +97,34 @@ def readJSON(projectName):
         upland(), main(1)
     except IndexError: print("[ \033[91mERROR\033[0m ] Something went wrong."), exit()
 
+def createProject():
+    try:
+        upland()
+        while 1:
+            projectName = str(input("[?] Project Name: "))
+            if projectName == "": createProject()
+            if os.path.exists('dev-projects/' + projectName): 
+                input("[ \033[91mERROR\033[0m ] Project already exist. Press any key to continue.")
+                createProject()
+            details = [
+                inquirer.Checkbox( "content", message="Check the files needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["HTML", "CSS", "JavaScript"], default=["HTML"]),
+                inquirer.Checkbox( "framework", message="Check the CDN needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["jQuery", "VueJS", "ReactJS Development", "ReactJS Production", "Bootstrap", "FontAwesome5", "Tailwind"]),
+            ]
+            projectDetails = inquirer.prompt(details)
+            projectSummary = {"name": projectName, "content": projectDetails["content"], "framework": projectDetails["framework"], "server_port": 8181 }
+            projectSummary = json.dumps(projectSummary, indent = 4)
+            if not os.path.exists('dev-projects/' + projectName): 
+                os.makedirs("dev-projects/" + projectName)
+                with open("dev-projects/" + projectName + "/config_development.json", "w") as outfile:
+                    outfile.write(projectSummary)
+            else:
+                with open("dev-projects/" + projectName + "/config_development.json", "w") as outfile:
+                    outfile.write(projectSummary)
+            upland(), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json created..\033[0m"), time.sleep(1), grantJSON(projectName)
+        else: createProject()
+    except:
+        upland(), main(1)
+
 def manageProject():
     try:
         while 1:
@@ -139,8 +135,20 @@ def manageProject():
                 print("[ \033[91mERROR\033[0m ] Project not found."), exit()
             else:
                 while 1:
+                    JSONData = open("dev-projects/" + projectName["name"] + "/config_development.json")
+                    JSONData = json.load(JSONData)
                     upland()
-                    startManage = [inquirer.List("start", message="Manage Option (\033[93mUse arrow keys\033[0m) ::: " + projectName["name"], choices=["Open in Default Browser", "Start Developmental Server", "Start Developmental Server PHP", "Open in VSCode [Requires VSCode]", "Add Developer Signature", "Delete Project", "Switch Project"])]
+                    startManage = [inquirer.List("start",
+                    message="Manage Option (\033[93mUse arrow keys\033[0m) ::: " + projectName["name"],
+                    choices=[
+                        "Open in Default Browser",
+                        "Start Developmental Server", 
+                        "Start Developmental Server PHP", 
+                        "Open in VSCode [Requires VSCode]", 
+                        "Inject PHP Script", 
+                        "Add Developer Signature", 
+                        "Delete Project", 
+                        "Switch Project"])]
                     startManage = inquirer.prompt(startManage)
                     if startManage["start"] == "Open in Default Browser":
                         webbrowser.open("dev-projects/" + projectName["name"] + "/index.html", new=2)
@@ -149,23 +157,25 @@ def manageProject():
                     elif startManage["start"] == "Start Developmental Server": 
                         upland(), print("\033[4mCtrl + C to close server...\033[0m")
                         print("\033[92m")
-                        print("SERVER\t\thttp://localhost:8000/dev-projects/" + projectName["name"] + "/index.html")
-                        print("SERVER\t\thttp://127.0.0.1:8000/dev-projects/" + projectName["name"] + "/index.html")
-                        system("python -m http.server 8000")
+                        print("SERVER\t\thttp://localhost:" + str(JSONData["server_port"]) + "/dev-projects/" + projectName["name"] + "/")
+                        print("SERVER\t\thttp://127.0.0.1:" + str(JSONData["server_port"]) + "/dev-projects/" + projectName["name"] + "/")
+                        system("python -m http.server " + str(JSONData["server_port"]))
                         print("\033[0m")
                         input("\033[4mPress any key to continue...\033[0m")
                     elif startManage["start"] == "Start Developmental Server PHP": 
                         upland(), print("\033[4mCtrl + C to close server...\033[0m")
                         print("\033[92m")
-                        print("SERVER\t\thttp://localhost:8000/dev-projects/" + projectName["name"] + "/index.php")
-                        print("SERVER\t\thttp://127.0.0.1:8000/dev-projects/" + projectName["name"] + "/index.php")
-                        system("php -S localhost:8000")
+                        print("SERVER\t\thttp://localhost:" + str(JSONData["server_port"]) + "/dev-projects/" + projectName["name"] + "/")
+                        print("SERVER\t\thttp://127.0.0.1:" + str(JSONData["server_port"]) + "/dev-projects/" + projectName["name"] + "/")
+                        system("php -S localhost:" + str(JSONData["server_port"]))
                         print("\033[0m")
                         input("\033[4mPress any key to continue...\033[0m")
                     elif startManage["start"] == "Open in VSCode [Requires VSCode]":
                         system("code dev-projects/" + projectName["name"])
                         print("[ \033[92mSUCCESS\033[0m ] VSCode Launched.")
                         input("\033[4mPress any key to continue...\033[0m")
+                    elif startManage["start"] == "Inject PHP Script": # NO FUNCTION
+                        print("Inject PHP Script") 
                     elif startManage["start"] == "Add Developer Signature": # NO FUNCTION
                         print("Add Developer Signature") 
                     elif startManage["start"] == "Delete Project": 
