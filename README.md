@@ -8,7 +8,9 @@
 	<img src="https://img.shields.io/badge/VueJS-Yes-green">
 	<img src="https://img.shields.io/badge/Tailwind-Yes-blue">
 	<img src="https://img.shields.io/badge/Bootstrap-Yes-blueviolet">
-	<img src="https://img.shields.io/badge/FontAwesome-Yes-lightgray">
+	<img src="https://img.shields.io/badge/FontAwesome-Yes-lightgray"><br>
+	<img src="https://img.shields.io/badge/ReactJS-Yes-9cf">
+	<img src="https://img.shields.io/badge/jQuery-Yes-yellow">
 </div>
 <div id="badges" align="center">
     <a href="https://www.linkedin.com/in/harold-eustaquio-b13190237/">
@@ -34,7 +36,15 @@
 </div>
 
 ## What's New?
-Additional Feature for Vortus. You can now include ReactJS and jQuery to your project.
+**[ 2022-07-15 ]** UI improvement and Bug Fixed.
+- jQuery CDN Duplicating fixed.
+- JSON preview on project creation is now turned off. 
+- HTML removed from file selection and will be generated as default.
+- Developmental Server Port changed to 8181 as default.
+- Developmental Server Port can now be changed on project's <u>*config_development.json*</u>
+- Server root directory changed from <u>*/dev-projects/project_name/*</u> to <u>*/project_name/*</u>
+
+**[ 2020-07-13 ]** Additional Feature for Vortus. You can now include ReactJS and jQuery to your project. 
 - React JS (Development & Production) Added!
 - jQuery Added
 

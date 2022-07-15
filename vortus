@@ -44,15 +44,14 @@ def addFramework(projectName, fws):
         cdn_vue = '<script src="https://unpkg.com/vue@3"></script>'
         script_vue = '''<div id="app">{{ message }}</div>
         <script>
-            const { createApp } = Vue
-        
-            createApp({
-            data() {
-                return {
-                message: 'Hello Vue!'
-                }
+        const { createApp } = Vue
+        createApp({
+        data() {
+            return {
+            message: 'Hello Vue!'
             }
-            }).mount('#app')
+        }
+        }).mount('#app')
         </script>'''
     else: 
         cdn_vue = "" 
@@ -60,9 +59,18 @@ def addFramework(projectName, fws):
     shutil.copy("core_template/index.html", "dev-projects/" + projectName)
     template = Template(filename="dev-projects/" + projectName + '/index.html')
     with open("dev-projects/" + projectName + '/index.html', "w") as myfile:
-        myfile.write(template.render(title=projectName, bootstrap=cdn_bootstrap, vue_1=cdn_vue, vue_2=script_vue, fontawesome5=cdn_fontawesome, tailwind=cdn_tailwind, jquery=cdn_jquery, reactdev=cdn_reactdev, reactprod=cdn_reactprod))
+        myfile.write(template.render(
+            title=projectName, 
+            bootstrap=cdn_bootstrap, 
+            vue_1=cdn_vue, 
+            vue_2=script_vue, 
+            fontawesome5=cdn_fontawesome, 
+            tailwind=cdn_tailwind, 
+            jquery=cdn_jquery, 
+            reactdev=cdn_reactdev, 
+            reactprod=cdn_reactprod))
 
-def cleanHTML(projectName):
+def removeBLine(projectName):
     with open("dev-projects/" + projectName + '/index.html', 'r') as f:
         with open("dev-projects/" + projectName + '/indexx.html', 'w') as file:
             for line in f:
@@ -71,35 +79,36 @@ def cleanHTML(projectName):
     shutil.copy("dev-projects/" + projectName + "/indexx.html", "dev-projects/" + projectName + "/index.html")               
     os.remove("dev-projects/" + projectName + '/indexx.html')
 
-# SYSTEM CORE 
+# AESTHETHIC
 
-def upland(): system("clear"), print("[ \033[96mW\033[0m ] VORTUS PROJECT MANAGER ::: Version: \033[93mDevion\033[0m")
+def header(): system("clear"), print("[\033[96m#\033[0m] VORTUS PROJECT MANAGER ::: Version: \033[93mDevion\033[0m")
+
+# SYSTEM CORE 
 
 def grantJSON(projectName):
     try:
         JSONData = open("dev-projects/" + projectName+ "/config_development.json")
         JSONData = json.load(JSONData), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json loaded..\033[0m")
-        print(json.dumps(JSONData, indent = 4)), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json checking..\033[0m")
+        print("[ \033[96m*\033[0m ] \033[93mconfig_development.json checking..\033[0m")
         print("[ \033[96m*\033[0m ] \033[93mGenerating Content(s)..\033[0m")
         for content in JSONData[0]["content"]:
-            if content == "HTML": html(projectName)
-            elif content == "CSS": css(projectName)
+            if content == "CSS": css(projectName)
             elif content == "JavaScript": js(projectName)
             else: pass
         print("[ \033[96m*\033[0m ] \033[93mGenerating Framework(s)..\033[0m")
         addFramework(projectName, JSONData[0]["framework"])
         print("[ \033[96m*\033[0m ] \033[93mFramework(s) Added..\033[0m")
-        cleanHTML(projectName)
+        removeBLine(projectName)
         print("[ \033[96m*\033[0m ] \033[93mProject Environment Cleaned..\033[0m")
 
         print("[ \033[96m*\033[0m ] \033[93mProject Ready..\033[0m")
         input("\033[4mPress any key to continue...\033[0m")
-        upland(), main(1)
+        header(), main(1)
     except IndexError: print("[ \033[91mERROR\033[0m ] Something went wrong."), exit()
 
 def createProject():
     try:
-        upland()
+        header()
         while 1:
             projectName = str(input("[?] Project Name: "))
             if projectName == "": createProject()
@@ -107,7 +116,7 @@ def createProject():
                 input("[ \033[91mERROR\033[0m ] Project already exist. Press any key to continue.")
                 createProject()
             details = [
-                inquirer.Checkbox( "content", message="Check the files needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["HTML", "CSS", "JavaScript"], default=["HTML"]),
+                inquirer.Checkbox( "content", message="Check the files needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["CSS", "JavaScript"]),
                 inquirer.Checkbox( "framework", message="Check the CDN needed for your project (Press \033[93m<space>\033[0m to select and \033[93m<enter>\033[0m to proceed)", choices=["jQuery", "VueJS", "ReactJS Development", "ReactJS Production", "Bootstrap", "FontAwesome5", "Tailwind"]),
             ]
             projectDetails = inquirer.prompt(details)
@@ -120,15 +129,15 @@ def createProject():
             else:
                 with open("dev-projects/" + projectName + "/config_development.json", "w") as outfile:
                     outfile.write(projectSummary)
-            upland(), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json created..\033[0m"), time.sleep(1), grantJSON(projectName)
+            header(), print("[ \033[96m*\033[0m ] \033[93mconfig_development.json created..\033[0m"), time.sleep(1), grantJSON(projectName)
         else: createProject()
     except:
-        upland(), main(1)
+        header(), main(1)
 
 def manageProject():
     try:
         while 1:
-            upland()
+            header()
             projectName = [inquirer.List("name", message="Select Project (\033[93mUse arrow keys\033[0m)", choices=os.listdir('dev-projects'))]
             projectName = inquirer.prompt(projectName)
             if not os.path.exists('dev-projects/' + projectName["name"]): 
@@ -137,7 +146,7 @@ def manageProject():
                 while 1:
                     JSONData = open("dev-projects/" + projectName["name"] + "/config_development.json")
                     JSONData = json.load(JSONData)
-                    upland()
+                    header()
                     startManage = [inquirer.List("start",
                     message="Manage Option (\033[93mUse arrow keys\033[0m) ::: " + projectName["name"],
                     choices=[
@@ -155,19 +164,19 @@ def manageProject():
                         print("[ \033[92mSUCCESS\033[0m ] Project Launched.")
                         input("\033[4mPress any key to continue...\033[0m")
                     elif startManage["start"] == "Start Developmental Server": 
-                        upland(), print("\033[4mCtrl + C to close server...\033[0m")
+                        header(), print("\033[4mCtrl + C to close server...\033[0m")
                         print("\033[92m")
-                        print("SERVER\t\thttp://localhost:" + str(JSONData["server_port"]) + "/dev-projects/" + projectName["name"] + "/")
-                        print("SERVER\t\thttp://127.0.0.1:" + str(JSONData["server_port"]) + "/dev-projects/" + projectName["name"] + "/")
-                        system("python -m http.server " + str(JSONData["server_port"]))
+                        print("SERVER\t\thttp://localhost:" + str(JSONData["server_port"]) + "/" + projectName["name"] + "/")
+                        print("SERVER\t\thttp://127.0.0.1:" + str(JSONData["server_port"]) + "/" + projectName["name"] + "/")
+                        system("cd dev-projects && python -m http.server " + str(JSONData["server_port"]))
                         print("\033[0m")
                         input("\033[4mPress any key to continue...\033[0m")
                     elif startManage["start"] == "Start Developmental Server PHP": 
-                        upland(), print("\033[4mCtrl + C to close server...\033[0m")
+                        header(), print("\033[4mCtrl + C to close server...\033[0m")
                         print("\033[92m")
-                        print("SERVER\t\thttp://localhost:" + str(JSONData["server_port"]) + "/dev-projects/" + projectName["name"] + "/")
-                        print("SERVER\t\thttp://127.0.0.1:" + str(JSONData["server_port"]) + "/dev-projects/" + projectName["name"] + "/")
-                        system("php -S localhost:" + str(JSONData["server_port"]))
+                        print("SERVER\t\thttp://localhost:" + str(JSONData["server_port"]) + "/" + projectName["name"] + "/")
+                        print("SERVER\t\thttp://127.0.0.1:" + str(JSONData["server_port"]) + "/" + projectName["name"] + "/")
+                        system("cd dev-projects && php -S localhost:" + str(JSONData["server_port"]))
                         print("\033[0m")
                         input("\033[4mPress any key to continue...\033[0m")
                     elif startManage["start"] == "Open in VSCode [Requires VSCode]":
@@ -187,13 +196,10 @@ def manageProject():
                     elif startManage["start"] == "Switch Project":
                         break
     except:
-        upland(), main(1)
-
-
-def fastTask():
-    init = [inquirer.List("solOption", message="Project Manager (\033[93mUse arrow keys\033[0m)", choices=["Create", "Manage", "Update", "Exit"])]
-    answer = inquirer.prompt(init)
-    return answer["solOption"]
+        header(), main(1)
+ 
+def updateSelf():
+    pass # UPDATE
 
 def main(args):
     try:
@@ -205,9 +211,12 @@ def main(args):
 │               Surelle-ha                │
 │                                         │
 └─────────────────────────────────────────┘\033[0m""")
-        transactionInit = fastTask()
+        init = [inquirer.List("solOption", message="Project Manager (\033[93mUse arrow keys\033[0m)", choices=["Create", "Manage", "Update", "Exit"])]
+        answer = inquirer.prompt(init)
+        transactionInit = answer["solOption"]
         if transactionInit == "Create": createProject()
         elif transactionInit == "Manage": manageProject()
+        elif transactionInit == "Update": updateSelf()
         else: exit()
     except:
         exit()
